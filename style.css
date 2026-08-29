@@ -3145,3 +3145,190 @@ textarea {
   30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
   40%, 60% { transform: translate3d(8px, 0, 0); }
 }
+/* ===== EXTREME MOBILE RESPONSIVENESS (For 300px - 480px iPhones) ===== */
+@media (max-width: 480px) {
+  /* GLOBAL FIXES */
+  html, body {
+    font-size: 14px; /* Slightly smaller base font for small screens */
+  }
+
+  .content {
+    padding: 15px 12px 60px; /* Reduce padding so content fits */
+  }
+
+  /* TOP BAR */
+  .topbar {
+    padding: 10px;
+    gap: 8px;
+  }
+  .brand-logo {
+    font-size: 11px;
+  }
+  .topbar-right {
+    gap: 5px;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .topbar-right .btn {
+    padding: 6px 8px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 100%; /* Sidebar becomes full width when opened */
+    max-width: 100%;
+  }
+  .nav-item {
+    font-size: 12px;
+    padding: 12px 14px;
+  }
+
+  /* PANELS AND SECTIONS */
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .section-head h2 {
+    font-size: 18px;
+  }
+
+  /* GRIDS & CARDS (Crucial for 300px fix) */
+  .g2, .g3 {
+    grid-template-columns: 1fr; /* Force single column layout */
+  }
+  .grid {
+    grid-template-columns: 1fr; 
+  }
+  .card {
+    padding: 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+  .thumb {
+    height: 100px;
+  }
+  .avatar {
+    height: 120px;
+  }
+
+  /* MAP / ZONES */
+  .map {
+    grid-template-columns: 1fr; 
+  }
+  .zone {
+    min-height: 80px;
+  }
+
+  /* BOARD & PINS */
+  .board {
+    min-height: 400px;
+  }
+  .pin {
+    width: 140px; /* Shrink pins so they stay on the 300px screen */
+    padding: 8px;
+  }
+  .pin .n {
+    font-size: 11px;
+  }
+
+  /* FORMS */
+  .checks {
+    grid-template-columns: 1fr; /* Stack checkboxes for easy tapping */
+  }
+  .chk {
+    font-size: 12px;
+  }
+  input, select, textarea {
+    font-size: 16px; /* Prevent iOS auto-zoom on inputs */
+  }
+
+  /* MODALS */
+  .modal {
+    padding: 10px;
+  }
+  .modal-panel, .palette-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+  .modal-head {
+    padding: 10px;
+  }
+  .modal-body {
+    padding: 12px;
+  }
+  .modal-foot {
+    padding: 10px;
+    flex-direction: column;
+  }
+  .modal-foot .btn {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  /* PALETTE */
+  .palette-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 12px;
+    padding: 12px;
+  }
+
+  /* TOASTS */
+  .toasts {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+  .toast {
+    max-width: 100%;
+    font-size: 10px;
+    padding: 10px;
+  }
+
+  /* ARTIFACT 3D OBJECT */
+  .artifact-container {
+    min-height: 220px;
+    padding: 10px 0;
+  }
+  .artifact-3d {
+    width: 140px;
+    height: 170px;
+    transform: scale(0.8);
+  }
+  .artifact-3d:hover {
+    transform: scale(0.85);
+  }
+
+  /* TIMELINE */
+  .tl {
+    padding-left: 20px;
+  }
+  .tl-item {
+    padding: 8px;
+  }
+  .tl-item::before {
+    left: -19px;
+  }
+
+  /* READOUT */
+  .readout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* VERDICT */
+  .verdict {
+    font-size: 22px;
+  }
+
+  /* MESSAGES */
+  .msg {
+    padding: 10px;
+  }
+  .msg-head {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
