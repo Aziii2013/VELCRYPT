@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CASE ZERO — CZ-001 Investigation Terminal</title>
+<meta name="description" content="CASE ZERO: interactive detective investigation terminal. Examine evidence, compare statements, expose the contradiction and solve case CZ-001." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<!-- BOOT -->
+<section id="boot" class="screen boot">
+  <div class="boot-inner">
+    <!-- Canvas for lightning effect -->
+    <canvas id="lightningFx" aria-hidden="true" style="position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;"></canvas>
+    <pre id="bootLog" class="boot-log" aria-live="polite" style="position:relative; z-index:1;"></pre>
+    <button id="skipBoot" class="btn ghost small" style="position:relative; z-index:1;">SKIP</button>
+  </div>
+</section>
+
+<!-- NEW LOGIN SCREEN -->
+<section id="login" class="screen hidden">
+  <div class="login-bg"></div>
+  <div class="login-inner">
+    <p class="kicker mono">SECURE PERSONNEL VERIFICATION</p>
+    <h2 class="login-title">RESTRICTED ACCESS</h2>
+    
+    <div class="login-panel">
+      <label class="f">CLEARANCE ID / USERNAME</label>
+      <input type="text" id="loginUser" placeholder="e.g., DETECTIVE_01" autocomplete="off" />
+      
+      <label class="f">PASSCODE</label>
+      <input type="password" id="loginPass" placeholder="••••••••" />
+      
+      <div id="humanCheck" class="human-check">
+        <label class="f">VERIFY HUMAN: SELECT ALL CARDS WITH A SECURITY CAMERA</label>
+        <div class="captcha-grid">
+          <div class="captcha-card" data-captcha="camera">🎥</div>
+          <div class="captcha-card" data-captcha="empty"></div>
+          <div class="captcha-card" data-captcha="camera">🎥</div>
+          <div class="captcha-card" data-captcha="empty"></div>
+          <div class="captcha-card" data-captcha="empty"></div>
+          <div class="captcha-card" data-captcha="camera">🎥</div>
+        </div>
+      </div>
+      
+      <button id="loginBtn" class="btn primary" style="width:100%; margin-top:16px;">🔐 ACCESS TERMINAL</button>
+    </div>
+  </div>
+</section>
+
+<!-- LANDING -->
+<section id="landing" class="screen hidden">
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="landing-inner">
+    <p class="kicker mono">SECURE TERMINAL · CLEARANCE LEVEL 4 · CZ-001</p>
+    <h1 class="logo" id="logo">CASE ZERO</h1>
+    <p class="tagline">Every clue leaves a trace.</p>
+    <button id="enterCase" class="btn primary">ENTER CASE</button>
+    <p class="mono micro dim">STATUS: OPEN · WINDOW 20:40 — 21:15 · ACCESS: 5</p>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app" class="screen app hidden">
+  <header class="topbar">
+    <button id="navToggle" class="btn ghost small only-mobile" aria-label="Open navigation">MENU</button>
+    <div class="brand">
+      <span class="brand-logo" id="logo2">CASE ZERO</span>
+      <span class="mono micro dim">CASE FILE: CZ-001 · STATUS: <b class="ok">OPEN</b> · INVESTIGATOR: YOU</span>
+    </div>
+    <div class="topbar-right">
+      <span class="mono micro dim only-desktop"><span class="dot live"></span> SYSTEM STATUS: ONLINE</span>
+      <button id="openSearch" class="btn ghost small">SEARCH <kbd>Ctrl</kbd><kbd>K</kbd></button>
+      <button id="resetCase" class="btn danger small">RESET CASE</button>
+      
+      <!-- NEW: Sound toggle button -->
+      <button id="soundToggle" class="btn ghost small">🔊 SOUND: ON</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav id="nav" class="sidebar" aria-label="Case sections">
+      <div class="nav-group mono micro dim">SECTIONS</div>
+      <button class="nav-item active" data-view="overview">OVERVIEW</button>
+      <button class="nav-item" data-view="evidence">EVIDENCE</button>
+      <button class="nav-item" data-view="suspects">SUSPECTS</button>
+      <button class="nav-item" data-view="timeline">TIMELINE</button>
+      <button class="nav-item" data-view="locations">LOCATIONS</button>
+      <button class="nav-item" data-view="messages">MESSAGES</button>
+      <button class="nav-item" data-view="board">CASE BOARD</button>
+      <button class="nav-item" data-view="notes">NOTES</button>
+      <button class="nav-item" data-view="theory">FINAL THEORY</button>
+      <div class="progress-panel">
+        <div class="mono micro dim">INVESTIGATION COMPLETION</div>
+        <div class="bar"><div id="progBar"></div></div>
+        <div id="progPct" class="mono big">0%</div>
+        <ul id="progList" class="mono micro dim"></ul>
+      </div>
+    </nav>
+    <main id="main" class="content" tabindex="-1"></main>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="document">
+    <div class="modal-head">
+      <h2 id="modalTitle" class="mono"></h2>
+      <button class="btn ghost small" data-close aria-label="Close">CLOSE</button>
+    </div>
+    <div id="modalBody" class="modal-body"></div>
+    <div id="modalFoot" class="modal-foot"></div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div id="palette" class="modal hidden" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="modal-backdrop" data-close-palette></div>
+  <div class="palette-panel">
+    <input id="paletteInput" class="palette-input mono" placeholder="Search case or type a command…" aria-label="Search case or command" autocomplete="off" />
+    <ul id="paletteList" class="palette-list"></ul>
+  </div>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<!-- MUSIC ENGINE -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="./raspberrymusic-beyond-reality-detective-suspense-dark-591716.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script src="./app.js"></script>
+</body>
+</html>
